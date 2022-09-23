@@ -1,4 +1,5 @@
 const userService = require('../services/user');
+const { User } = require('../models');
 
 const login = async (req, res) => {
   const { email } = req.body;
@@ -30,8 +31,22 @@ const getUsers = async (_req, res) => {
   return res.status(200).json(result);
 };
 
+const userById = async (req, res) => {
+  const { id } = req.params;
+  const findId = await User.findByPk(id);
+
+  if (!findId) {
+    return res.status(404).json({ message: 'User does not exist' });
+  }
+
+  const result = await userService.userById(id);
+
+  return res.status(200).json(result);
+};
+
 module.exports = {
   login,
   userCreate,
   getUsers,
+  userById,
 };
