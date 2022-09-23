@@ -1,3 +1,4 @@
+const Joi = require('joi');
 const { User } = require('../models');
 
 const validateLogin = async (req, res, next) => {
@@ -16,6 +17,34 @@ const validateLogin = async (req, res, next) => {
   next();
 };
 
+const userSchema = Joi.object({
+  displayName: Joi.string().min(8).required().messages({
+    'string.min': '"displayName" length must be at least 8 characters long',
+  }),
+  email: Joi.string().email().required().messages({
+    'string.email': '"email" must be a valid email',
+  }),
+  password: Joi.string().min(6).required().messages({
+    'string.min': '"password" length must be at least 6 characters long',
+  }),
+  image: Joi.string(),
+});
+
+const validateUser = async (req, res, next) => {
+  const { displayName, email, password, image } = req.body;
+  const fields = { displayName, email, password, image };
+  const { error } = userSchema.validate(fields);
+
+  const user = await User.findOne({ where: { email: req.body.email } }); 
+  console.log(user);
+  if (user) return res.status(409).json({ message: 'User already registered' }); 
+
+  if (error) return res.status(400).json({ message: error.message });
+  
+  next();
+};
+
 module.exports = {
   validateLogin,
+  validateUser,
 };
