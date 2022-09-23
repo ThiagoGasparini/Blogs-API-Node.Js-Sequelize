@@ -16,6 +16,7 @@ app.get('/user', validateToken, userController.getUsers);
 app.get('/user/:id', validateToken, userController.userById);
 
 app.post('/categories', validateToken, categoryController.categoryCreate);
+app.get('/categories/', validateToken, categoryController.getCategories);
 
 // ...
 
