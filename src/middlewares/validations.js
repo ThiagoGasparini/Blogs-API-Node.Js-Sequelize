@@ -1,4 +1,4 @@
-const { User } = require('../models/User');
+const { User } = require('../models');
 
 const validateLogin = async (req, res, next) => {
   const { email, password } = req.body;
