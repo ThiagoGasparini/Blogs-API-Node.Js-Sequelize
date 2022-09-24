@@ -1,5 +1,10 @@
 const express = require('express');
-const { validateLogin, validateUser, validateToken } = require('./middlewares/validations');
+const {
+  validateLogin,
+  validateUser,
+  validateToken,
+  validateTokenAuth,
+} = require('./middlewares/validations');
 const userController = require('./controllers/user');
 const categoryController = require('./controllers/category');
 const postController = require('./controllers/post');
@@ -21,6 +26,12 @@ app.get('/categories/', validateToken, categoryController.getCategories);
 
 app.get('/post', validateToken, postController.getPosts);
 app.get('/post/:id', validateToken, postController.getPostId);
+app.put(
+  '/post/:id',
+  validateToken,
+  validateTokenAuth,
+  postController.updatePost,
+);
 
 // ...
 

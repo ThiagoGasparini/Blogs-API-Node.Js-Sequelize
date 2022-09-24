@@ -34,7 +34,16 @@ const getPostId = async (id) => {
   return result;
 };
 
+const updatePost = async ({ id, title, content }) => {
+  const toBeUpdatedPost = await getPostId(id);
+
+  const result = await toBeUpdatedPost.update({ title, content });
+
+  return result;
+};
+
 module.exports = {
   getPosts,
   getPostId,
+  updatePost,
 };

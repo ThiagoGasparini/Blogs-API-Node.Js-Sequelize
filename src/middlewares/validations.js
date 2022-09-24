@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
+const postService = require('../services/post');
 
 const validateLogin = async (req, res, next) => {
   const { email, password } = req.body;
@@ -59,8 +60,23 @@ const validateToken = async (req, res, next) => {
   next();
 };
 
+const validateTokenAuth = async (req, res, next) => {
+  const { id } = req.params;
+  const { authorization } = req.headers;
+
+  const { userId } = await postService.getPostId(id);
+
+  const tokenVerify = jwt.verify(authorization, process.env.JWT_SECRET);
+  if (tokenVerify.id !== userId) {
+    return res.status(401).json({ message: 'Unauthorized user' });
+  }
+
+  next();
+};
+
 module.exports = {
   validateLogin,
   validateUser,
   validateToken,
+  validateTokenAuth,
 };
