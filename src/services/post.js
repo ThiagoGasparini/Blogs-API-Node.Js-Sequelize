@@ -34,12 +34,24 @@ const getPostId = async (id) => {
   return result;
 };
 
-const updatePost = async ({ id, title, content }) => {
+const updatePost = async (id, title, content, userId) => {
+  const [updated] = await BlogPost.update(
+    { title, content },
+    { where: { id, userId } },
+  );
+
+  if (!updated) {
+    return {
+      error: {
+        message: 'Unauthorized user',
+        type: 'unauthorized',
+      },
+    };
+  }
+  
   const toBeUpdatedPost = await getPostId(id);
 
-  const result = await toBeUpdatedPost.update({ title, content });
-
-  return result;
+  return { blogPostUpdated: toBeUpdatedPost };
 };
 
 module.exports = {
