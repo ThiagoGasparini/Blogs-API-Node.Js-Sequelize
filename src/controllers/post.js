@@ -29,8 +29,23 @@ const updatePost = async (req, res) => {
   return res.status(200).json(result);
 };
 
+const deletePost = async (req, res) => {
+  const { id } = req.params;
+
+  const result = await BlogPost.findByPk(id);
+
+  if (!result) {
+    return res.status(404).json({ message: 'Post does not exist' });
+  }
+
+  await postService.deletePost(id);
+
+  return res.status(204).send();
+};
+
 module.exports = {
   getPosts,
   getPostId,
   updatePost,
+  deletePost,
 };

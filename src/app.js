@@ -32,6 +32,7 @@ app.put(
   validateTokenAuth,
   postController.updatePost,
 );
+app.delete('/post/:id', validateToken, validateTokenAuth, postController.deletePost);
 
 // ...
 
